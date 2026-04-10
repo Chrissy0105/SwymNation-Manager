@@ -20,8 +20,14 @@ public class CreateSessionFrame extends JFrame {
 
         JPanel mainPanel = UIHelper.createMainPanel();
         JLabel header = UIHelper.createHeader("Create Class Session", UIHelper.PRIMARY_BLUE);
+        JLabel subHeader = UIHelper.createSubHeader("Add a new class session to the system.");
         JPanel wrapperPanel = UIHelper.createFormWrapperPanel();
-        JPanel card = UIHelper.createCardPanel(750, 420);
+        JPanel card = UIHelper.createCardPanel(750, 430);
+
+        JPanel topPanel = new JPanel(new java.awt.BorderLayout());
+        topPanel.setBackground(UIHelper.BACKGROUND);
+        topPanel.add(header, java.awt.BorderLayout.NORTH);
+        topPanel.add(subHeader, java.awt.BorderLayout.SOUTH);
 
         dateField = new JTextField();
         timeField = new JTextField();
@@ -30,7 +36,7 @@ public class CreateSessionFrame extends JFrame {
 
         card.add(UIHelper.createLabeledField("Session Date (YYYY-MM-DD)", dateField));
         card.add(Box.createVerticalStrut(14));
-        card.add(UIHelper.createLabeledField("Time (e.g. 10:00 AM)", timeField));
+        card.add(UIHelper.createLabeledField("Time (example: 10:00 AM)", timeField));
         card.add(Box.createVerticalStrut(14));
         card.add(UIHelper.createLabeledField("Level", levelBox));
         card.add(Box.createVerticalStrut(14));
@@ -49,7 +55,7 @@ public class CreateSessionFrame extends JFrame {
         createButton.addActionListener(new CreateButtonListener());
         backButton.addActionListener(new BackButtonListener());
 
-        mainPanel.add(header, java.awt.BorderLayout.NORTH);
+        mainPanel.add(topPanel, java.awt.BorderLayout.NORTH);
         mainPanel.add(wrapperPanel, java.awt.BorderLayout.CENTER);
 
         UIHelper.finalizeFrame(this, mainPanel);
@@ -65,6 +71,11 @@ public class CreateSessionFrame extends JFrame {
                 ValidationHelper.isEmpty(time) ||
                 ValidationHelper.isEmpty(capacityText)) {
             JOptionPane.showMessageDialog(this, "Please fill in all fields.");
+            return;
+        }
+
+        if (!sessionDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            JOptionPane.showMessageDialog(this, "Date must be in YYYY-MM-DD format.");
             return;
         }
 
@@ -90,7 +101,9 @@ public class CreateSessionFrame extends JFrame {
             levelBox.setSelectedIndex(0);
             capacityField.setText("");
         } else {
-            JOptionPane.showMessageDialog(this, "Could not create session.");
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not create session. Check the date format and database connection.");
         }
     }
 

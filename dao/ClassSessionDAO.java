@@ -3,7 +3,9 @@ package dao;
 import db.DBConnection;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 
 public class ClassSessionDAO {
 
@@ -13,9 +15,11 @@ public class ClassSessionDAO {
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, sessionDate);
-            stmt.setString(2, time);
-            stmt.setString(3, level);
+            LocalDate parsedDate = LocalDate.parse(sessionDate.trim());
+
+            stmt.setDate(1, Date.valueOf(parsedDate));
+            stmt.setString(2, time.trim());
+            stmt.setString(3, level.trim());
             stmt.setInt(4, capacity);
 
             return stmt.executeUpdate() > 0;
